@@ -6,7 +6,7 @@
     @close="$emit('closeRegister')"
   >
   <div class="register_details">
-    <div>
+    <!-- <div>
         <p>DB配置:</p>
         <p>Apollo:</p>
         <p>ZK:</p>
@@ -20,6 +20,9 @@
             <p :class="{'red_text':!registerDetailData.machine_status}">{{registerDetailData.machine_status?'已配置':'非配置'}}</p>
             <p :class="{'red_text':!registerDetailData.case_status}">{{registerDetailData.case_status?'已配置':'非配置'}}</p>
 
+    </div> -->
+    <div v-for="{ label, className, value } in detailList">
+      {{ label }}：<span :class="className">{{ value }}</span>
     </div>
   </div>
     <template #footer>
@@ -42,6 +45,22 @@ export default {
         registerDetailData:{
             default:true
         }
+    },
+    computed: {
+      detailList() {
+        const { db, apollo, zk, machine_status, case_status } = this.registerDetailData
+        const text_configured = '已配置'
+        const text_unconfigured = '未配置'
+        const red_class_name = 'red_text'
+        const list = [
+          { label: 'DB配置', value: db ? text_configured : text_unconfigured, className: db ? red_class_name : '' },
+          { label: 'Apollo', value: apollo ? text_configured : text_unconfigured, className: apollo ? red_class_name : '' },
+          { label: 'ZK', value: zk ? text_configured : text_unconfigured, className: zk ? red_class_name : '' },
+          { label: '账号绑定机房配置', value: machine_status ? text_configured : text_unconfigured, className: machine_status ? red_class_name : '' },
+          { label: '账号绑定实例配置', value: case_status ? text_configured : text_unconfigured, className: case_status ? red_class_name : '' },
+        ]
+        return list
+      }
     }
 }
 </script>
@@ -49,6 +68,9 @@ export default {
 <style lang="scss" scoped>
     .register_details {
         display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        row-gap: 12px;
         column-gap:40px;
     }
     .red_text {
