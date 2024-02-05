@@ -81,20 +81,19 @@
         prop="affectProjects"
         label="影响项目">
         <template v-slot="{row}">
-            <span style="color: blue;" @click="openAffectProjectModel(row)">查看详情</span>
+            <span style="color: blue;" @click="openAffectProjectModel(row,'biz')">查看详情</span>
         </template>
     </el-table-column>
     <el-table-column
         prop="affectGames"
         label="影响游戏">
         <template v-slot="{row}">
-            <span style="color: blue;" @click="openAffectGameModel(row)">查看详情</span>
+            <span style="color: blue;" @click="openAffectProjectModel(row,'gid')">查看详情</span>
         </template>
     </el-table-column>
   </el-table>
   <RegisterDetails :visible="registerDetails" :registerDetailData="registerDetailData" @closeRegister="registerDetails=false"></RegisterDetails>
-  <AffectModel type="biz" :visible="afffectProjectModel" @closeAffectProModel="afffectProjectModel=false" :data="currentProData" projectName="项目(biz)" status="调度启用状态"></AffectModel>
-  <AffectModel type="gid" :visible="afffectGameModel" @closeAffectGameModel="afffectGameModel=false" :data="currentGameData" projectName="游戏(gid)" status="调度启用状态"></AffectModel>
+  <AffectModel :type="typeValue" :visible="affectProject" @closeAffectProModel="affectProject=false" :data="currentProData"></AffectModel>
   <UsingStatus :visible="usingStatus" @closeUsingDialog="usingStatus=false" ></UsingStatus>
     </div>
 </template>
@@ -122,6 +121,8 @@ export default {
         //     machine_status:true,
         //     case_status:true
         //   },
+          typeValue:'biz',
+          affectProject:false,
           usingStatus:false,
           currentProData:[],
           currentGameData:[],
@@ -193,6 +194,18 @@ export default {
             {
                 name:'逆水寒',
                 status:true
+            }],
+            affectGame:[{
+                name:'游戏',
+                status:true
+            },
+            {
+                name:'方方',
+                status:false
+            },
+            {
+                name:'逆水寒',
+                status:true
             }]
           },{
             idc: '4032',
@@ -216,7 +229,7 @@ export default {
             case_status:false,
             //影响项目
             affectProject:[{
-                name:'快手',
+                name:'快手222',
                 status:true
             },
             {
@@ -249,15 +262,17 @@ export default {
 
         },
         //影响项目
-        openAffectProjectModel(row) {
-            this.afffectProjectModel=true
-            this.currentProData=row
+        // openAffectProjectModel(row,type) {
+        //     this.affectProject=true
+        //     this.currentProData=row
 
-        },
+        // },
         //影响游戏
-        openAffectGameModel(row) {
-            this.afffectGameModel=true
-            this.currentGameData=row
+        openAffectProjectModel(row,type) {
+            this.typeValue=type
+            this.affectProject=true
+            this.currentProData=row
+            console.log(row)
         },
         openUsingDialog(row) {
             this.usingStatus=true

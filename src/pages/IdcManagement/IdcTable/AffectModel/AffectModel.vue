@@ -1,7 +1,7 @@
 <template>
     <div>
   <el-dialog :model-value="visible" :title="title"  width="350" @close="closeDialog()">
-    <el-table :data="data.affectProject" border>
+    <el-table :data="tableData" border>
       <el-table-column property="name" :label="projectName" width="150" />
       <el-table-column property="status" label="调度启用状态"  width="200" />
     </el-table>
@@ -56,20 +56,17 @@ export default {
         projectName() {
             return this.type === 'biz' ? '项目(biz)' : '游戏(gid)'
         },
-        // status() {
-        //     return this.type === 'biz' ? '项目(biz)' : '游戏(gid)'
-        // }
+        tableData() {
+            return this.type === 'biz' ? this.data.affectProject : this.data.affectGame 
+        }
+        
     },
     mounted() {
         console.log(this.data)
     },
     methods:{
         closeDialog() {
-            if(this.type==='biz') {
                 this.$emit('closeAffectProModel')
-            }else {
-                this.$emit('closeAffectGameModel')
-            }
         }
     }
 }
