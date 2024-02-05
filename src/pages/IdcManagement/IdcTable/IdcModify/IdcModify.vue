@@ -6,7 +6,7 @@
                 <el-icon><Edit /></el-icon>
             </div>
         </div>
-        <el-dialog v-model="centerDialogVisible" title="IDC名称修改" width="250" center append-to-body>
+        <el-dialog v-model="centerDialogVisible" width="250" center append-to-body>
             <el-input v-model="data.idcName" placeholder="Please input" />
         <template #footer>
           <div class="dialog_footer">
@@ -23,7 +23,8 @@ export default {
     name: 'IdcModify',
     props:{
         data:{
-           default:{}
+            require:true,
+            default:{}
         }
     },
     data() {

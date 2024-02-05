@@ -42,8 +42,8 @@
         width="130">
         <template v-slot="{ row }">
             <p v-if="row.registerStatus===1">已注册</p>
-            <p v-if="row.registerStatus===0" style="color: red;">未成功注册,<span style="color: blue;" @click="registerDetailsHanler()">查看详情</span></p>
-            <p v-if="row.registerStatus===2" style="color: green;">注册中,<span style="color: blue;">查看详情</span></p>
+            <p v-if="row.registerStatus===0" style="color: red;">未成功注册,<span style="color: blue;" @click="registerDetailsHanler(row)">查看详情</span></p>
+            <p v-if="row.registerStatus===2" style="color: green;">注册中,<span style="color: blue;" @click="registerDetailsHanler(row)">查看详情</span></p>
         </template>
     </el-table-column>
     <el-table-column
@@ -65,6 +65,9 @@
     <el-table-column
         prop="usingStatus"
         label="调度启用状态">
+        <template v-slot="{row}">
+            <el-switch v-model="row.usingStatus" @click="openUsingDialog(row)" />
+        </template>
     </el-table-column>
     <el-table-column
         prop="server"
@@ -74,22 +77,55 @@
         prop="example"
         label="实例">
     </el-table-column>
+    <el-table-column
+        prop="affectProjects"
+        label="影响项目">
+        <template v-slot="{row}">
+            <span style="color: blue;" @click="openAffectProjectModel(row)">查看详情</span>
+        </template>
+    </el-table-column>
+    <el-table-column
+        prop="affectGames"
+        label="影响游戏">
+        <template v-slot="{row}">
+            <span style="color: blue;" @click="openAffectGameModel(row)">查看详情</span>
+        </template>
+    </el-table-column>
   </el-table>
-  <RegisterDetails :visible="registerDetails" @closeRegister="registerDetails=false"></RegisterDetails>
+  <RegisterDetails :visible="registerDetails" :registerDetailData="registerDetailData" @closeRegister="registerDetails=false"></RegisterDetails>
+  <AffectModel type="biz" :visible="afffectProjectModel" @closeAffectProModel="afffectProjectModel=false" :data="currentProData" projectName="项目(biz)" status="调度启用状态"></AffectModel>
+  <AffectModel type="gid" :visible="afffectGameModel" @closeAffectGameModel="afffectGameModel=false" :data="currentGameData" projectName="游戏(gid)" status="调度启用状态"></AffectModel>
+  <UsingStatus :visible="usingStatus" @closeUsingDialog="usingStatus=false" ></UsingStatus>
     </div>
 </template>
 
 <script>
-import IdcModify from './IdcModify.vue';
-import RegisterDetails from './RegisterDetails.vue';
+import IdcModify from './IdcModify/IdcModify.vue';
+import RegisterDetails from './RegisterDetails/RegisterDetails.vue';
+import AffectModel from './AffectModel/AffectModel.vue';
+import UsingStatus from './UsingStatus/UsingStatus.vue';
 export default {
     name: 'IdcTable',
     components:{
         IdcModify,
-        RegisterDetails
+        RegisterDetails,
+        AffectModel,
+        UsingStatus
     },
     data() {
         return {
+          //查看详情数据
+        //   registerDetailsData:{
+        //     db:true,
+        //     apollo:true,
+        //     zk:false,
+        //     machine_status:true,
+        //     case_status:true
+        //   },
+          usingStatus:false,
+          currentProData:[],
+          currentGameData:[],
+          registerDetailData: {},
           registerDetails:false,
           tableData: [{
             idc: '4031',
@@ -103,9 +139,28 @@ export default {
             updateTime:'2022.12.32',
             //运营阶段
             operation:1,
-            usingStatus:1,
+            usingStatus:true,
             server:'11',
             example:'实例22',
+            // 查看详情
+            db:true,
+            apollo:true,
+            zk:false,
+            machine_status:true,
+            case_status:true,
+            //影响项目
+            affectProject:[{
+                name:'快手',
+                status:true
+            },
+            {
+                name:'网易',
+                status:false
+            },
+            {
+                name:'逆水寒',
+                status:true
+            }]
           }, {
             idc: '4032',
             idcName: 'xxx机房',
@@ -118,9 +173,27 @@ export default {
             updateTime:'2022.12.32',
             //y运营阶段
             operation:1,
-            usingStatus:1,
+            usingStatus:false,
             server:'11',
             example:'实例22',
+            db:true,
+            apollo:true,
+            zk:false,
+            machine_status:false,
+            case_status:true,
+            //影响项目
+            affectProject:[{
+                name:'快手',
+                status:true
+            },
+            {
+                name:'方方',
+                status:false
+            },
+            {
+                name:'逆水寒',
+                status:true
+            }]
           },{
             idc: '4032',
             idcName: 'xxx机房',
@@ -133,19 +206,61 @@ export default {
             updateTime:'2022.12.32',
             //y运营阶段
             operation:1,
-            usingStatus:1,
+            usingStatus:false,
             server:'11',
             example:'实例22',
+            db:true,
+            apollo:true,
+            zk:false,
+            machine_status:true,
+            case_status:false,
+            //影响项目
+            affectProject:[{
+                name:'快手',
+                status:true
+            },
+            {
+                name:'哈哈',
+                status:true
+            },
+            {
+                name:'喜喜',
+                status:true
+            }]
           }],
-          multipleSelection: []
+          multipleSelection: [],
+          //affectModel
+          afffectProjectModel:false,
+          afffectGameModel:false
         }
+      },
+      mounted() {
+        console.log(11)
       },
       methods:{
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        registerDetailsHanler() {
+        //查看详情组件
+        registerDetailsHanler(row) {
+            console.log(row);
             this.registerDetails=true
+            this.registerDetailData = row
+
+        },
+        //影响项目
+        openAffectProjectModel(row) {
+            this.afffectProjectModel=true
+            this.currentProData=row
+
+        },
+        //影响游戏
+        openAffectGameModel(row) {
+            this.afffectGameModel=true
+            this.currentGameData=row
+        },
+        openUsingDialog(row) {
+            this.usingStatus=true
         }
       }
 }
