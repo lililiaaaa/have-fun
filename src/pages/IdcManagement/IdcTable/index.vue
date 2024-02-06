@@ -66,7 +66,7 @@
         prop="usingStatus"
         label="调度启用状态">
         <template v-slot="{row}">
-            <el-switch v-model="row.usingStatus" @click="openUsingDialog(row)" />
+        <UsingStatus></UsingStatus>
         </template>
     </el-table-column>
     <el-table-column
@@ -93,8 +93,7 @@
     </el-table-column>
   </el-table>
   <RegisterDetails :visible="registerDetails" :registerDetailData="registerDetailData" @closeRegister="registerDetails=false"></RegisterDetails>
-  <AffectModel :type="typeValue" :visible="affectProject" @closeAffectProModel="affectProject=false" :data="currentProData"></AffectModel>
-  <UsingStatus :visible="usingStatus" @closeUsingDialog="usingStatus=false" ></UsingStatus>
+  <AffectModel :visible="affectProjectModel" :type="typeValue" :data="currentData"  @closeAffectProject="affectProjectModel=false" ></AffectModel>
     </div>
 </template>
 
@@ -121,11 +120,10 @@ export default {
         //     machine_status:true,
         //     case_status:true
         //   },
-          typeValue:'biz',
-          affectProject:false,
+          currentData:{},  
+          typeValue:'',
+          affectProjectModel:false,
           usingStatus:false,
-          currentProData:[],
-          currentGameData:[],
           registerDetailData: {},
           registerDetails:false,
           tableData: [{
@@ -151,15 +149,27 @@ export default {
             case_status:true,
             //影响项目
             affectProject:[{
-                name:'快手',
+                projectName:'快手',
                 status:true
             },
             {
-                name:'网易',
+                projectName:'网易',
                 status:false
             },
             {
-                name:'逆水寒',
+                projectName:'逆水寒',
+                status:true
+            }],
+            affectGame:[{
+                gameName:'游戏111',
+                status:true
+            },
+            {
+                gameName:'方方11',
+                status:false
+            },
+            {
+                gameName:'逆水寒11',
                 status:true
             }]
           }, {
@@ -184,27 +194,27 @@ export default {
             case_status:true,
             //影响项目
             affectProject:[{
-                name:'快手',
+                projectName:'快手',
                 status:true
             },
             {
-                name:'方方',
+                projectName:'方方',
                 status:false
             },
             {
-                name:'逆水寒',
+                projectName:'逆水寒',
                 status:true
             }],
             affectGame:[{
-                name:'游戏',
+                gameName:'游戏22',
                 status:true
             },
             {
-                name:'方方',
+                gameName:'方方22',
                 status:false
             },
             {
-                name:'逆水寒',
+                gameName:'逆水寒22',
                 status:true
             }]
           },{
@@ -229,15 +239,27 @@ export default {
             case_status:false,
             //影响项目
             affectProject:[{
-                name:'快手222',
+                projectName:'快手',
                 status:true
             },
             {
-                name:'哈哈',
+                projectName:'哈哈',
                 status:true
             },
             {
-                name:'喜喜',
+                projectName:'喜喜',
+                status:true
+            }],
+            affectGame:[{
+                gameName:'游戏33',
+                status:true
+            },
+            {
+                gameName:'方方33',
+                status:false
+            },
+            {
+                gameName:'逆水寒33',
                 status:true
             }]
           }],
@@ -261,18 +283,13 @@ export default {
             this.registerDetailData = row
 
         },
-        //影响项目
-        // openAffectProjectModel(row,type) {
-        //     this.affectProject=true
-        //     this.currentProData=row
-
-        // },
-        //影响游戏
+        //影响游戏/项目
         openAffectProjectModel(row,type) {
+            //区分组件展示游戏 /项目
             this.typeValue=type
-            this.affectProject=true
-            this.currentProData=row
-            console.log(row)
+            this.currentData=row
+            // console.log(this.currentData,this.typeValue)
+            this.affectProjectModel=true
         },
         openUsingDialog(row) {
             this.usingStatus=true

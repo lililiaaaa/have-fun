@@ -6,14 +6,16 @@
                 <el-icon><Edit /></el-icon>
             </div>
         </div>
-        <el-dialog v-model="centerDialogVisible" width="250" center append-to-body>
+        <el-dialog v-model="centerDialogVisible" width="250" center append-to-body :show-close="false" class="edit_dialog">
+            <div style="padding: 0 16px;">
             <el-input v-model="data.idcName" placeholder="Please input" />
-        <template #footer>
-          <div class="dialog_footer">
-            <el-button @click="centerDialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="saveHanlder()"> 保存</el-button>
+            </div>
+          <div class="edit_container">
+            <!-- <el-button @click="centerDialogVisible = false" class="btn_left">取消</el-button>
+            <el-button class="button_save"  type="text" @click="saveHanlder()" class=""> 保存</el-button> -->
+            <p class="left" @click="centerDialogVisible = false">取消</p>
+            <p class='right' @click="saveHanlder()">保存</p>
           </div>
-        </template>
         </el-dialog>
     </div>
 </template>
@@ -29,11 +31,11 @@ export default {
     },
     data() {
         return {
-            centerDialogVisible:false
+            centerDialogVisible:true
         }
     },
     mounted() {
-        console.log(this.data);
+        // console.log(this.data);
     },
     methods:{
         openDialog() {
@@ -49,6 +51,9 @@ export default {
 </script>
 <style lang="scss" scoped>
     .idc_container {
+        .edit_input {
+            margin: 0 10px;
+        }
         .idc_wrap {
             display: flex;
             align-items: center;
@@ -67,4 +72,31 @@ export default {
             display: block;
         }
     }
+</style>
+<style lang="scss">
+.edit_dialog {
+    padding: 16px 0 0 0;
+    border-radius: 8px;
+    .edit_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // column-gap:80px;
+        p {
+            margin-top: 30px;
+            padding-top: 10px;
+            flex: 1;
+            height: 30px;
+            text-align: center;
+            border-top: 1px solid #efefef;
+        }
+        .left {
+            border-right: 1px solid #efefef;
+        }
+        .right {
+            color: green;
+        }
+    }
+}
+    
 </style>

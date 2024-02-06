@@ -1,14 +1,14 @@
 <template>
-    <div>
-  <el-dialog :model-value="visible" :title="title"  width="350" @close="closeDialog()">
-    <el-table :data="tableData" border>
-      <el-table-column property="name" :label="projectName" width="150" />
-      <el-table-column property="status" label="调度启用状态"  width="200" />
-    </el-table>
-    <el-button type="primary" @click="closeDialog()" style="margin:20px 120px 0 ;">
-          关闭
-    </el-button>
-  </el-dialog>
+    <div>           
+    <el-dialog :model-value="visible" :title="title"  width="350" @close="closeDialog()">
+        <el-table :data="tableData" border>
+        <el-table-column :prop="propertyName" :label="labelName" width="150" />
+        <el-table-column prop="status" label="调度启用状态"  width="200" />
+        </el-table>
+        <el-button type="primary" @click="closeDialog()" style="margin:20px 120px 0 ;">
+            关闭
+        </el-button>
+    </el-dialog>
     </div>
 </template>
 
@@ -16,58 +16,37 @@
 export default {
     name: 'AffectModel',
     props:{
-        type: {
-            default: 'biz'
-        },
         visible:{
-            require:true,
-        },
-        projectName:{
             require:true
         },
-        status:{
+        type:{
             require:true
         },
         data:{
             require:true
-        }
-    },
-    data() {
-        return {
-          gridData: [{
-          projectName: '逆水寒',
-          status: 1,
-        }, {
-          projectName: '网易',
-          status: 0,
-        }, {
-          projectName: '网易',
-          status: 1,
-        }, {
-          projectName: '快手',
-          status: 0,
-        }],
-        }
+        },
+    
     },
     computed: {
         title() {
-            return this.type === 'biz' ? '影响项目(biz)' : '影响游戏(gid)'
+           return this.type==='biz' ? '影响项目(biz)':'影响游戏(gid)'
         },
-        projectName() {
-            return this.type === 'biz' ? '项目(biz)' : '游戏(gid)'
+        
+        labelName() {
+           return this.type==='biz' ? '项目(biz)':'游戏(gid)'
         },
         tableData() {
-            return this.type === 'biz' ? this.data.affectProject : this.data.affectGame 
+            return this.type==='biz' ? this.data.affectProject:this.data.affectGame
+        },
+        propertyName() {
+            return this.type==='biz' ?'projectName':'gameName'
         }
-        
-    },
-    mounted() {
-        console.log(this.data)
+       
     },
     methods:{
         closeDialog() {
-                this.$emit('closeAffectProModel')
-        }
+            this.$emit('closeAffectProject')
+        }  
     }
 }
 </script> 
