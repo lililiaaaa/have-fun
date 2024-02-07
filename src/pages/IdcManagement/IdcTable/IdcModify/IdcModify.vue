@@ -8,7 +8,7 @@
         </div>
         <el-dialog v-model="centerDialogVisible" width="250" center append-to-body :show-close="false" class="edit_dialog">
             <div style="padding: 0 16px;">
-            <el-input v-model="data.idcName" placeholder="Please input" />
+            <el-input v-model="value" placeholder="Please input" />
             </div>
           <div class="edit_container">
             <!-- <el-button @click="centerDialogVisible = false" class="btn_left">取消</el-button>
@@ -26,12 +26,13 @@ export default {
     props:{
         data:{
             require:true,
-            default:{}
+            default:{},
         }
     },
     data() {
         return {
-            centerDialogVisible:true
+            centerDialogVisible:false,
+            value: ''
         }
     },
     mounted() {
@@ -45,6 +46,14 @@ export default {
         saveHanlder() {
             this.centerDialogVisible = false
             console.log('传列表数据的唯一标识给后台，调用接口保存修改')
+        }
+    },
+    watch: {
+        centerDialogVisible(newValue) {
+            if (newValue) {
+                //监听编辑框 赋值给input
+                this.value = this.data.idcName
+            }
         }
     }
 }
